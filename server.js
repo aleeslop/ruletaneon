@@ -101,29 +101,30 @@ const server = http.createServer((req, res) => {
     isCurrentlySpinning = true;
     spinCount++;
 
+    // Ciclo automático de 4 vueltas: 1, 2, 3 (Pruebas) y 4 (SIEMPRE 51)
+    const cycleStep = ((spinCount - 1) % 4) + 1;
+
     let targetIndex;
     let isWinner = false;
 
-    if (spinCount <= 3) {
-      // Vueltas 1, 2 y 3: Número 100% aleatorio (excluyendo el 51)
+    if (cycleStep <= 3) {
+      // Vueltas 1, 2 y 3: Número 100% aleatorio (excluyendo obligatoriamente el 51)
       const allowed = [];
       for (let i = 0; i < TOTAL_NUMBERS; i++) {
         if (i !== WINNER_INDEX) allowed.push(i);
       }
       targetIndex = allowed[Math.floor(Math.random() * allowed.length)];
       isWinner = false;
-    } else if (spinCount === 4) {
-      // Vuelta 4 (La Ganadora): Fija en el número 51
-      targetIndex = WINNER_INDEX;
-      isWinner = true;
     } else {
-      targetIndex = Math.floor(Math.random() * TOTAL_NUMBERS);
-      isWinner = (targetIndex === WINNER_INDEX);
+      // Vuelta 4: SIEMPRE ES EL 51 GARANTIZADO
+      targetIndex = WINNER_INDEX; // 51
+      isWinner = true;
     }
 
     const payload = {
       type: 'spin',
-      turn: spinCount,
+      turn: cycleStep,
+      totalSpins: spinCount,
       targetIndex: targetIndex,
       targetLabel: items[targetIndex],
       isWinner: isWinner,

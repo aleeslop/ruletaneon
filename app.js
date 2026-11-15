@@ -516,25 +516,24 @@
     if (isSpinning) return;
     localSpinCount++;
 
+    const cycleStep = ((localSpinCount - 1) % 4) + 1;
     let targetIndex;
     let isWinner = false;
 
-    if (localSpinCount <= 3) {
+    if (cycleStep <= 3) {
       const allowed = [];
       for (let i = 0; i < TOTAL_NUMBERS; i++) {
         if (i !== WINNER_INDEX) allowed.push(i);
       }
       targetIndex = allowed[Math.floor(Math.random() * allowed.length)];
       isWinner = false;
-    } else if (localSpinCount === 4) {
+    } else {
+      // Vuelta 4: SIEMPRE 51
       targetIndex = WINNER_INDEX;
       isWinner = true;
-    } else {
-      targetIndex = Math.floor(Math.random() * TOTAL_NUMBERS);
-      isWinner = (targetIndex === WINNER_INDEX);
     }
 
-    executeSpin(targetIndex, items[targetIndex], isWinner, localSpinCount);
+    executeSpin(targetIndex, items[targetIndex], isWinner, cycleStep);
   }
 
   // ================= INICIALIZACIÓN =================

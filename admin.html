@@ -313,7 +313,7 @@
 
     function updateTurnUI(turn) {
       currentTurn = turn;
-      const nextTurn = turn + 1;
+      const nextTurn = (turn % 4) + 1;
 
       if (nextTurn === 1) {
         turnName.textContent = 'VUELTA 1 DE PRUEBA';
@@ -336,15 +336,9 @@
       } else if (nextTurn === 4) {
         turnName.textContent = 'VUELTA 4 (OFICIAL)';
         turnName.classList.add('winner-ready');
-        turnSub.textContent = 'Cae en el número 51 con confeti';
+        turnSub.textContent = 'SIEMPRE cae en el número 51 con confeti';
         btnText.textContent = 'GIRAR VUELTA 4 (51)';
         spinBtnRemote.classList.add('winner-spin');
-      } else {
-        turnName.textContent = `VUELTA #${nextTurn} (LIBRE)`;
-        turnName.classList.remove('winner-ready');
-        turnSub.textContent = 'Ciclo principal completado';
-        btnText.textContent = 'GIRAR RULETA';
-        spinBtnRemote.classList.remove('winner-spin');
       }
     }
 
