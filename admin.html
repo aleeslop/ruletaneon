@@ -2,24 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ruleta Oficial | Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Space+Grotesk:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Vista ultra-limpia sin nada arriba ni abajo: Solo la ruleta gigante centrada */
+    /* Vista 100% limpia para Administrador: Número grande arriba + Ruleta gigante táctil */
     body, html {
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100dvh;
       overflow: hidden;
+      background-color: var(--bg-primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--bg-primary);
     }
 
     .app-container {
@@ -28,22 +28,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
+      padding: env(safe-area-inset-top, 8px) 0 env(safe-area-inset-bottom, 8px);
       margin: 0;
+      box-sizing: border-box;
     }
 
     .roulette-section {
       width: 100%;
       height: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
+      gap: 12px;
     }
 
     .wheel-outer-wrapper {
-      width: min(94vw, 75dvh, 640px) !important;
-      height: min(94vw, 75dvh, 640px) !important;
+      width: min(92vw, calc(100dvh - 145px), 580px) !important;
+      height: min(92vw, calc(100dvh - 145px), 580px) !important;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
@@ -62,7 +65,12 @@
 
   <div class="app-container">
     <main class="roulette-section">
-      <!-- Ruleta Gigante Táctil (Toca para girar en todas las pantallas) -->
+      <!-- Número grande arriba que señala la ruleta -->
+      <div class="top-number-display">
+        <span class="number-readout" id="activeNumber">--</span>
+      </div>
+
+      <!-- Ruleta Gigante Táctil (Toca para girar para todos) -->
       <div class="wheel-outer-wrapper" id="adminWheelTouchable" title="Toca la ruleta para girar">
         <!-- Aguja física animada -->
         <div class="pointer-assembly" id="pointerAssembly">
@@ -91,11 +99,12 @@
 
   <script>
     /**
-     * CONTROL DE ADMINISTRADOR ULTRA-MINIMALISTA
-     * Solo la ruleta en pantalla. Al tocarla, gira para todos los usuarios.
-     * Vuelta 1: Prueba (aleatorio)
-     * Vuelta 2: Prueba (aleatorio)
+     * CONTROL DE ADMINISTRADOR
+     * Toca la ruleta para girar.
+     * Vuelta 1: Aleatoria (no 51)
+     * Vuelta 2: Aleatoria (no 51)
      * Vuelta 3: SIEMPRE 51
+     * Sonido y animación 100% idénticos en todas las vueltas.
      */
     const TOTAL_NUMBERS = 151;
     const SPIN_DURATION_MS = 3600;
@@ -117,9 +126,9 @@
     const wheelContainer = document.getElementById('wheelContainer');
     const pointerNeedle = document.getElementById('pointerNeedle');
     const adminWheelTouchable = document.getElementById('adminWheelTouchable');
-    const hubCenterBtn = document.getElementById('hubCenterBtn');
+    const activeNumber = document.getElementById('activeNumber');
 
-    // Web Audio
+    // Web Audio API
     let audioCtx = null;
     function initAudio() {
       if (!audioCtx) {
@@ -296,6 +305,7 @@
         draw(currentRotation);
 
         const curItem = getNumAtPointer(currentRotation);
+        if (activeNumber) activeNumber.textContent = curItem.label;
 
         if (curItem.index !== lastTickIndex) {
           lastTickIndex = curItem.index;
@@ -308,6 +318,9 @@
         } else {
           currentRotation = endRot;
           draw(currentRotation);
+
+          const finalItem = getNumAtPointer(currentRotation);
+          if (activeNumber) activeNumber.textContent = finalItem.label;
 
           wheelContainer.classList.remove('spinning');
           isSpinning = false;
@@ -340,6 +353,11 @@
 
     adminWheelTouchable.addEventListener('click', triggerSpinFromAdmin);
     adminWheelTouchable.addEventListener('touchstart', () => initAudio(), { passive: true });
+    if (activeNumber) {
+      activeNumber.style.cursor = 'pointer';
+      activeNumber.addEventListener('click', triggerSpinFromAdmin);
+      activeNumber.addEventListener('touchstart', () => initAudio(), { passive: true });
+    }
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
@@ -350,6 +368,8 @@
 
     renderWheel();
     draw(0);
+    const initialItem = getNumAtPointer(0);
+    if (activeNumber) activeNumber.textContent = initialItem.label;
   </script>
 </body>
 </html>

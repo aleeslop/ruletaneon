@@ -2,24 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ruleta Oficial | Sorteo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Space+Grotesk:wght@500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Vista ultra-limpia sin nada arriba ni abajo: Solo la ruleta gigante centrada */
+    /* Vista 100% limpia para espectadores: Número grande arriba + Ruleta gigante centrada */
     body, html {
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100dvh;
       overflow: hidden;
+      background-color: var(--bg-primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--bg-primary);
     }
 
     .app-container {
@@ -28,22 +28,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
+      padding: env(safe-area-inset-top, 8px) 0 env(safe-area-inset-bottom, 8px);
       margin: 0;
+      box-sizing: border-box;
     }
 
     .roulette-section {
       width: 100%;
       height: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
+      gap: 12px;
     }
 
     .wheel-outer-wrapper {
-      width: min(94vw, 75dvh, 640px) !important;
-      height: min(94vw, 75dvh, 640px) !important;
+      width: min(92vw, calc(100dvh - 145px), 580px) !important;
+      height: min(92vw, calc(100dvh - 145px), 580px) !important;
       cursor: default;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
@@ -58,7 +61,12 @@
 
   <div class="app-container">
     <main class="roulette-section">
-      <!-- Ruleta Gigante en el Centro Visual (Solo Vista para Espectadores) -->
+      <!-- Número grande arriba que señala la ruleta -->
+      <div class="top-number-display">
+        <span class="number-readout" id="activeNumber">--</span>
+      </div>
+
+      <!-- Ruleta Gigante en el Centro Visual (Solo Vista Espectador) -->
       <div class="wheel-outer-wrapper" id="wheelOuterWrapper">
         <!-- Aguja física indicadora superior -->
         <div class="pointer-assembly" id="pointerAssembly">
@@ -85,6 +93,7 @@
     </main>
   </div>
 
+  <canvas id="confettiCanvas" style="display:none;"></canvas>
   <script src="app.js"></script>
 </body>
 </html>

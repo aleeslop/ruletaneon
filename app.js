@@ -35,6 +35,7 @@
   const wheelContainer = document.getElementById('wheelContainer');
   const pointerNeedle = document.getElementById('pointerNeedle');
   const hudValue = document.getElementById('hudValue');
+  const activeNumber = document.getElementById('activeNumber');
 
   // Estado del espectador
   const spectatorStatusContainer = document.getElementById('spectatorStatusContainer');
@@ -438,6 +439,7 @@
 
       const currentItem = getNumberAtPointer(currentRotation);
       if (hudValue) hudValue.textContent = currentItem.label;
+      if (activeNumber) activeNumber.textContent = currentItem.label;
 
       if (currentItem.index !== lastTickIndex) {
         lastTickIndex = currentItem.index;
@@ -453,6 +455,7 @@
 
         const finalItem = getNumberAtPointer(currentRotation);
         if (hudValue) hudValue.textContent = finalItem.label;
+        if (activeNumber) activeNumber.textContent = finalItem.label;
 
         if (wheelContainer) wheelContainer.classList.remove('spinning');
         isSpinning = false;
@@ -546,6 +549,7 @@
     drawWheel(0);
     const initialItem = getNumberAtPointer(0);
     if (hudValue) hudValue.textContent = initialItem.label;
+    if (activeNumber) activeNumber.textContent = initialItem.label;
     connectToServer();
   }
 
