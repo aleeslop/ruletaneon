@@ -3,11 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ruleta de Sorteos Oficial | Vista Pública</title>
+  <title>Ruleta Oficial | Sorteo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Vista ultra-limpia sin nada arriba ni abajo: Solo la ruleta gigante centrada */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-primary);
+    }
+
+    .app-container {
+      width: 100vw;
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    }
+
+    .roulette-section {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .wheel-outer-wrapper {
+      width: min(94vw, 75dvh, 640px) !important;
+      height: min(94vw, 75dvh, 640px) !important;
+      cursor: default;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+  </style>
 </head>
 <body class="spectator-view">
   <!-- Efectos de iluminación ambiental neón -->
@@ -15,33 +56,18 @@
   <div class="bg-glow bg-glow-magenta"></div>
   <div class="grid-overlay"></div>
 
-  <!-- Vista pública ultra-limpia -->
   <div class="app-container">
-    <!-- Encabezado minimalista -->
-    <header class="spectator-header">
-      <div class="badge-live">
-        <span class="live-dot"></span> SORTEO OFICIAL &bull; NÚMEROS 00 AL 150
-      </div>
-    </header>
-
-    <!-- Ruleta Gigante en el Centro Visual -->
     <main class="roulette-section">
-      <!-- Indicador HUD en tiempo real del número bajo la aguja -->
-      <div class="hud-tracker" id="hudTracker">
-        <span class="hud-label">APUNTANDO A:</span>
-        <span class="hud-value" id="hudValue">00</span>
-      </div>
-
-      <!-- Contenedor de la Ruleta -->
-      <div class="wheel-outer-wrapper">
-        <!-- Aguja indicadora superior con amortiguación física -->
+      <!-- Ruleta Gigante en el Centro Visual (Solo Vista para Espectadores) -->
+      <div class="wheel-outer-wrapper" id="wheelOuterWrapper">
+        <!-- Aguja física indicadora superior -->
         <div class="pointer-assembly" id="pointerAssembly">
           <div class="pointer-glow"></div>
           <div class="pointer-pin"></div>
           <div class="pointer-needle" id="pointerNeedle"></div>
         </div>
 
-        <!-- Canvas de la Ruleta en alta resolución -->
+        <!-- Canvas de la Ruleta -->
         <div class="wheel-canvas-container" id="wheelContainer">
           <canvas id="rouletteCanvas" width="1000" height="1000"></canvas>
           
@@ -56,43 +82,8 @@
           </div>
         </div>
       </div>
-
-      <!-- Texto de Estado / Resultado Público -->
-      <div class="spectator-status-container" id="spectatorStatusContainer">
-        <div class="status-pulse-dot" id="statusDot"></div>
-        <div class="spectator-status-text" id="spectatorStatus">EN ESPERA DEL SORTEO</div>
-      </div>
     </main>
   </div>
-
-  <!-- Modal / Cartel para Anuncio de Resultados -->
-  <div class="modal-backdrop" id="resultModal">
-    <div class="modal-card" id="modalCard">
-      <div class="modal-glow" id="modalGlow"></div>
-      
-      <div class="modal-header">
-        <div class="modal-badge" id="modalBadge">RESULTADO</div>
-      </div>
-
-      <div class="modal-body">
-        <div class="modal-number-circle" id="modalNumberCircle">
-          <span class="modal-number" id="modalNumber">--</span>
-        </div>
-        <h2 class="modal-message" id="modalMessage">...</h2>
-        <p class="modal-subtext" id="modalSubtext">Número validado oficialmente por el sistema.</p>
-      </div>
-
-      <div class="modal-footer-hint">
-        <span>Toca la pantalla para continuar</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Capa de Confeti / Partículas -->
-  <canvas id="confettiCanvas" class="confetti-layer"></canvas>
-
-  <!-- ACCESO SECRETO DE ADMINISTRADOR (Completamente invisible, sin bordes, 100x100px) -->
-  <div id="secretAdminTrigger" class="secret-admin-trigger" aria-hidden="true"></div>
 
   <script src="app.js"></script>
 </body>

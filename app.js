@@ -376,20 +376,19 @@
   }
 
   // ================= ANUNCIO DE RESULTADO LIMPIO (TODO 100% IDÉNTICO) =================
-  // Mismo sonido, misma física y sin animaciones ni confeti diferente al caer en 51.
   function showResult(targetNum, isWinner, turnNumber) {
-    spectatorStatusContainer.classList.remove('spinning', 'winner');
+    if (spectatorStatusContainer) spectatorStatusContainer.classList.remove('spinning', 'winner');
 
-    // Sonido exactamente idéntico para todos los giros (sin fanfarrias delatoras)
+    // Sonido exactamente idéntico para todos los giros
     playTestChime();
-
-    // Animación exactamente igual: sin lluvia de confeti
     stopConfetti();
 
-    if (isWinner) {
-      spectatorStatus.textContent = `VUELTA OFICIAL: ${targetNum}`;
-    } else {
-      spectatorStatus.textContent = `VUELTA DE PRUEBA: ${targetNum}`;
+    if (spectatorStatus) {
+      if (isWinner) {
+        spectatorStatus.textContent = `VUELTA OFICIAL: ${targetNum}`;
+      } else {
+        spectatorStatus.textContent = `VUELTA DE PRUEBA: ${targetNum}`;
+      }
     }
   }
 
@@ -404,10 +403,12 @@
     closeModal();
 
     isSpinning = true;
-    wheelContainer.classList.add('spinning');
-    spectatorStatusContainer.classList.add('spinning');
-    spectatorStatusContainer.classList.remove('winner');
-    spectatorStatus.textContent = 'RULETA EN MOVIMIENTO...';
+    if (wheelContainer) wheelContainer.classList.add('spinning');
+    if (spectatorStatusContainer) {
+      spectatorStatusContainer.classList.add('spinning');
+      spectatorStatusContainer.classList.remove('winner');
+    }
+    if (spectatorStatus) spectatorStatus.textContent = 'RULETA EN MOVIMIENTO...';
 
     // Cálculo matemático exacto de rotación
     const targetSliceCenter = (targetIndex + 0.5) * sliceAngle;
@@ -436,7 +437,7 @@
       drawWheel(currentRotation);
 
       const currentItem = getNumberAtPointer(currentRotation);
-      hudValue.textContent = currentItem.label;
+      if (hudValue) hudValue.textContent = currentItem.label;
 
       if (currentItem.index !== lastTickIndex) {
         lastTickIndex = currentItem.index;
@@ -451,9 +452,9 @@
         drawWheel(currentRotation);
 
         const finalItem = getNumberAtPointer(currentRotation);
-        hudValue.textContent = finalItem.label;
+        if (hudValue) hudValue.textContent = finalItem.label;
 
-        wheelContainer.classList.remove('spinning');
+        if (wheelContainer) wheelContainer.classList.remove('spinning');
         isSpinning = false;
 
         setTimeout(() => {
@@ -515,13 +516,15 @@
   // Fallback si se ejecuta de forma standalone sin servidor activo
   function runLocalSpinFallback() {
     if (isSpinning) return;
+    if (localSpinCount >= 3) {
+      localSpinCount = 0;
+    }
     localSpinCount++;
 
-    const cycleStep = ((localSpinCount - 1) % 4) + 1;
     let targetIndex;
     let isWinner = false;
 
-    if (cycleStep <= 3) {
+    if (localSpinCount <= 2) {
       const allowed = [];
       for (let i = 0; i < TOTAL_NUMBERS; i++) {
         if (i !== WINNER_INDEX) allowed.push(i);
@@ -529,12 +532,12 @@
       targetIndex = allowed[Math.floor(Math.random() * allowed.length)];
       isWinner = false;
     } else {
-      // Vuelta 4: SIEMPRE 51
+      // Vuelta 3: SIEMPRE 51
       targetIndex = WINNER_INDEX;
       isWinner = true;
     }
 
-    executeSpin(targetIndex, items[targetIndex], isWinner, cycleStep);
+    executeSpin(targetIndex, items[targetIndex], isWinner, localSpinCount);
   }
 
   // ================= INICIALIZACIÓN =================
@@ -542,7 +545,7 @@
     renderWheelTexture();
     drawWheel(0);
     const initialItem = getNumberAtPointer(0);
-    hudValue.textContent = initialItem.label;
+    if (hudValue) hudValue.textContent = initialItem.label;
     connectToServer();
   }
 

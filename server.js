@@ -100,9 +100,9 @@ const server = http.createServer((req, res) => {
 
     isCurrentlySpinning = true;
 
-    // Conteo estricto del 1 al 4:
-    // Al pasar de la vuelta 4, vuelve a iniciar en la vuelta 1 automáticamente.
-    if (spinCount >= 4) {
+    // Conteo estricto del 1 al 3:
+    // Vueltas 1 y 2 (Prueba) y Vuelta 3 (SIEMPRE 51)
+    if (spinCount >= 3) {
       spinCount = 0;
     }
     spinCount++;
@@ -110,8 +110,8 @@ const server = http.createServer((req, res) => {
     let targetIndex;
     let isWinner = false;
 
-    if (spinCount <= 3) {
-      // Vueltas 1, 2 y 3: Número 100% aleatorio (excluyendo obligatoriamente el 51)
+    if (spinCount <= 2) {
+      // Vueltas 1 y 2: Número 100% aleatorio (excluyendo obligatoriamente el 51)
       const allowed = [];
       for (let i = 0; i < TOTAL_NUMBERS; i++) {
         if (i !== WINNER_INDEX) allowed.push(i);
@@ -119,7 +119,7 @@ const server = http.createServer((req, res) => {
       targetIndex = allowed[Math.floor(Math.random() * allowed.length)];
       isWinner = false;
     } else {
-      // Vuelta 4: SIEMPRE ES EL 51 GARANTIZADO
+      // Vuelta 3: SIEMPRE ES EL 51 GARANTIZADO
       targetIndex = WINNER_INDEX; // 51
       isWinner = true;
     }

@@ -91,57 +91,19 @@ html, body {
 }
 
 /* ================= CONTENEDOR PRINCIPAL =================
-   Usa 100dvh y safe-area-insets para ajustarse a la barra de Safari
-   en iPhone sin empujar elementos hacia afuera.
+   Diseño ultra-minimalista: Solo la ruleta gigante centrada
    ========================================================= */
 .app-container {
   position: relative;
   z-index: 2;
   width: 100vw;
   height: 100dvh;
-  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: calc(env(safe-area-inset-top, 0px) + 0.5rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 0.8rem);
-}
-
-/* ================= ENCABEZADO MINIMALISTA ================= */
-.spectator-header {
-  text-align: center;
-  z-index: 10;
-  flex-shrink: 0;
-}
-
-.badge-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(0, 242, 254, 0.08);
-  border: 1px solid rgba(0, 242, 254, 0.25);
-  color: var(--cyan-primary);
-  font-size: clamp(0.68rem, 2.5vw, 0.82rem);
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  padding: 0.35rem 1rem;
-  border-radius: 9999px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--cyan-primary);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--cyan-primary);
-  animation: pulseDot 2s ease-in-out infinite;
-}
-
-@keyframes pulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.4; }
+  justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 /* ================= SECCIÓN DE LA RULETA GIGANTE ================= */
@@ -152,50 +114,13 @@ html, body {
   justify-content: center;
   position: relative;
   width: 100%;
-  flex: 1;
-  min-height: 0;
+  height: 100%;
 }
 
-/* HUD Tracker */
-.hud-tracker {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(14, 18, 29, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.25rem 1rem;
-  border-radius: 100px;
-  margin-bottom: 0.5rem;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  flex-shrink: 0;
-}
-
-.hud-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--text-dim);
-}
-
-.hud-value {
-  font-family: var(--font-mono);
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--cyan-primary);
-  min-width: 2.2rem;
-  text-align: center;
-  text-shadow: 0 0 12px var(--cyan-glow);
-}
-
-/* Ruleta Gigante:
-   Dimensionada con min(88vw, 52dvh, 560px) para que en cualquier móvil vertical
-   deje suficiente espacio arriba y abajo sin desbordarse hacia la barra de navegación.
-*/
 .wheel-outer-wrapper {
   position: relative;
-  width: min(88vw, 52dvh, 560px);
-  height: min(88vw, 52dvh, 560px);
+  width: min(94vw, 75dvh, 640px);
+  height: min(94vw, 75dvh, 640px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -341,21 +266,7 @@ html, body {
 
 /* ================= TEXTO DE ESTADO / RESULTADO ================= */
 .spectator-status-container {
-  margin-top: 0.6rem;
-  margin-bottom: 0.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  background: rgba(14, 18, 30, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.55rem 1.4rem;
-  border-radius: 100px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
-  max-width: 90vw;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
+  display: none !important;
 }
 
 .status-pulse-dot {

@@ -3,137 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Control de Administrador | Ruleta Oficial</title>
+  <title>Ruleta Oficial | Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Estilos exclusivos del panel de administrador */
-    .admin-badge-bar {
+    /* Vista ultra-limpia sin nada arriba ni abajo: Solo la ruleta gigante centrada */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100dvh;
+      overflow: hidden;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 0.4rem;
-      margin-bottom: 0.4rem;
+      justify-content: center;
+      background-color: var(--bg-primary);
     }
 
-    .badge-admin-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(255, 0, 127, 0.15);
-      border: 1px solid rgba(255, 0, 127, 0.45);
-      color: var(--magenta-primary);
-      font-size: clamp(0.7rem, 2.4vw, 0.8rem);
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      padding: 0.35rem 1rem;
-      border-radius: 100px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
-    }
-
-    .badge-admin-status .dot {
-      width: 8px;
-      height: 8px;
-      background: var(--magenta-primary);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--magenta-primary);
-      animation: pulseDot 1.5s infinite;
-    }
-
-    .steps-progress {
+    .app-container {
+      width: 100vw;
+      height: 100dvh;
       display: flex;
-      gap: 0.35rem;
-      width: min(90vw, 420px);
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
     }
 
-    .step-pill {
-      flex: 1;
-      padding: 0.35rem 0.2rem;
-      font-size: clamp(0.65rem, 2.2vw, 0.72rem);
-      font-weight: 700;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-dim);
-      text-align: center;
-      transition: all 0.3s;
+    .roulette-section {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
 
-    .step-pill.active {
-      background: rgba(0, 242, 254, 0.15);
-      border-color: var(--cyan-primary);
-      color: var(--cyan-primary);
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
-    }
-
-    .step-pill.step-winner.active {
-      background: rgba(0, 242, 254, 0.25);
-      border-color: var(--cyan-primary);
-      color: #ffffff;
-      font-weight: 900;
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
-    }
-
-    /* La ruleta en modo admin es táctil y tiene cursor pointer */
-    .admin-wheel-clickable {
+    .wheel-outer-wrapper {
+      width: min(94vw, 75dvh, 640px) !important;
+      height: min(94vw, 75dvh, 640px) !important;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
-    .admin-wheel-clickable:active:not(.spinning) {
+    .wheel-outer-wrapper:active:not(.spinning) {
       transform: scale(0.985);
-    }
-
-    /* Indicador flotante sutil que invita a tocar */
-    .tap-hint-pill {
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      color: var(--cyan-primary);
-      text-transform: uppercase;
-      font-weight: 700;
-      background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.2);
-      padding: 0.2rem 0.8rem;
-      border-radius: 100px;
-      margin-top: 0.3rem;
-      animation: pulseSubtle 2s infinite alternate;
-    }
-
-    @keyframes pulseSubtle {
-      0% { opacity: 0.7; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.03); }
-    }
-
-    .admin-bottom-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      margin-top: 0.4rem;
-    }
-
-    .btn-reset-mini {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-dim);
-      font-size: 0.72rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 100px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s;
-    }
-
-    .btn-reset-mini:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
     }
   </style>
 </head>
@@ -144,31 +61,9 @@
   <div class="grid-overlay"></div>
 
   <div class="app-container">
-    <!-- Encabezado de Administrador -->
-    <header class="spectator-header">
-      <div class="admin-badge-bar">
-        <div class="badge-admin-status">
-          <span class="dot"></span> MODO CONTROL &bull; TOCA LA RULETA PARA GIRAR
-        </div>
-        <div class="steps-progress">
-          <div class="step-pill active" id="step1">1. Prueba</div>
-          <div class="step-pill" id="step2">2. Prueba</div>
-          <div class="step-pill" id="step3">3. Prueba</div>
-          <div class="step-pill step-winner" id="step4">4. Gana 51</div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Ruleta Gigante Interactiva Exclusiva de Administrador -->
     <main class="roulette-section">
-      <!-- Indicador HUD en tiempo real del número bajo la aguja -->
-      <div class="hud-tracker" id="hudTracker">
-        <span class="hud-label">APUNTANDO A:</span>
-        <span class="hud-value" id="hudValue">00</span>
-      </div>
-
-      <!-- Contenedor de la Ruleta (Toca aquí para girar) -->
-      <div class="wheel-outer-wrapper admin-wheel-clickable" id="adminWheelTouchable" title="Toca para girar la ruleta para todos">
+      <!-- Ruleta Gigante Táctil (Toca para girar en todas las pantallas) -->
+      <div class="wheel-outer-wrapper" id="adminWheelTouchable" title="Toca la ruleta para girar">
         <!-- Aguja física animada -->
         <div class="pointer-assembly" id="pointerAssembly">
           <div class="pointer-glow"></div>
@@ -181,7 +76,7 @@
           <canvas id="rouletteCanvas" width="1000" height="1000"></canvas>
           
           <!-- Núcleo central decorativo -->
-          <div class="wheel-center-hub">
+          <div class="wheel-center-hub" id="hubCenterBtn">
             <div class="hub-ring"></div>
             <div class="hub-core">
               <svg class="hub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -191,31 +86,16 @@
           </div>
         </div>
       </div>
-
-      <div class="tap-hint-pill" id="tapHint">👆 TOCA LA RULETA PARA GIRAR</div>
-
-      <!-- Texto de Estado -->
-      <div class="spectator-status-container" id="spectatorStatusContainer">
-        <div class="status-pulse-dot" id="statusDot"></div>
-        <div class="spectator-status-text" id="spectatorStatus">LISTO: VUELTA 1 DE PRUEBA</div>
-      </div>
-
-      <div class="admin-bottom-actions">
-        <button id="resetCycleBtn" class="btn-reset-mini" type="button">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-            <path d="M3 3v5h5"/>
-          </svg>
-          Reiniciar a Vuelta 1
-        </button>
-      </div>
     </main>
   </div>
 
   <script>
     /**
-     * SCRIPT DEL PANEL DE ADMINISTRADOR INTERACTIVO
-     * Tocar la ruleta envía la orden al servidor y gira en todos los móviles.
+     * CONTROL DE ADMINISTRADOR ULTRA-MINIMALISTA
+     * Solo la ruleta en pantalla. Al tocarla, gira para todos los usuarios.
+     * Vuelta 1: Prueba (aleatorio)
+     * Vuelta 2: Prueba (aleatorio)
+     * Vuelta 3: SIEMPRE 51
      */
     const TOTAL_NUMBERS = 151;
     const SPIN_DURATION_MS = 3600;
@@ -231,18 +111,13 @@
     let currentRotation = 0;
     let isSpinning = false;
     let lastTickIndex = -1;
-    let currentTurn = 0;
 
     const canvas = document.getElementById('rouletteCanvas');
     const ctx = canvas.getContext('2d');
     const wheelContainer = document.getElementById('wheelContainer');
     const pointerNeedle = document.getElementById('pointerNeedle');
-    const hudValue = document.getElementById('hudValue');
-    const spectatorStatus = document.getElementById('spectatorStatus');
-    const spectatorStatusContainer = document.getElementById('spectatorStatusContainer');
     const adminWheelTouchable = document.getElementById('adminWheelTouchable');
-    const tapHint = document.getElementById('tapHint');
-    const resetCycleBtn = document.getElementById('resetCycleBtn');
+    const hubCenterBtn = document.getElementById('hubCenterBtn');
 
     // Web Audio
     let audioCtx = null;
@@ -394,30 +269,12 @@
       setTimeout(() => pointerNeedle.classList.remove('tick'), 45);
     }
 
-    function updateStepPills(turn) {
-      currentTurn = turn;
-      const nextTurn = (turn % 4) + 1;
-      for (let i = 1; i <= 4; i++) {
-        const el = document.getElementById(`step${i}`);
-        if (el) el.classList.toggle('active', i === nextTurn);
-      }
-      if (!isSpinning) {
-        if (nextTurn === 1) spectatorStatus.textContent = 'LISTO: VUELTA 1 DE PRUEBA';
-        else if (nextTurn === 2) spectatorStatus.textContent = 'LISTO: VUELTA 2 DE PRUEBA';
-        else if (nextTurn === 3) spectatorStatus.textContent = 'LISTO: VUELTA 3 DE PRUEBA';
-        else if (nextTurn === 4) spectatorStatus.textContent = 'LISTO: VUELTA 4 (OFICIAL: 51)';
-      }
-    }
-
     function executeSpin(targetIndex, targetLabel, isWinner, turn) {
       if (isSpinning) return;
       initAudio();
       isSpinning = true;
 
       wheelContainer.classList.add('spinning');
-      spectatorStatusContainer.classList.add('spinning');
-      spectatorStatus.textContent = 'RULETA EN MOVIMIENTO...';
-      tapHint.textContent = '⏳ GIRANDO EN TODAS LAS PANTALLAS...';
 
       const targetSlice = (targetIndex + 0.5) * sliceAngle;
       const pointer = -Math.PI / 2;
@@ -439,7 +296,6 @@
         draw(currentRotation);
 
         const curItem = getNumAtPointer(currentRotation);
-        hudValue.textContent = curItem.label;
 
         if (curItem.index !== lastTickIndex) {
           lastTickIndex = curItem.index;
@@ -452,22 +308,10 @@
         } else {
           currentRotation = endRot;
           draw(currentRotation);
-          const finalItem = getNumAtPointer(currentRotation);
-          hudValue.textContent = finalItem.label;
 
           wheelContainer.classList.remove('spinning');
-          spectatorStatusContainer.classList.remove('spinning');
           isSpinning = false;
           playChime();
-
-          if (isWinner) {
-            spectatorStatus.textContent = `VUELTA OFICIAL: ${targetLabel}`;
-          } else {
-            spectatorStatus.textContent = `VUELTA DE PRUEBA: ${targetLabel}`;
-          }
-
-          tapHint.textContent = '👆 TOCA LA RULETA PARA EL SIGUIENTE GIRO';
-          updateStepPills(turn);
         }
       }
       requestAnimationFrame(step);
@@ -478,41 +322,25 @@
     evtSource.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data);
-        if (data.type === 'init') {
-          updateStepPills(data.spinCount);
-        } else if (data.type === 'spin') {
+        if (data.type === 'spin') {
           executeSpin(data.targetIndex, data.targetLabel, data.isWinner, data.turn);
-        } else if (data.type === 'reset') {
-          updateStepPills(0);
-          spectatorStatus.textContent = 'LISTO: VUELTA 1 DE PRUEBA';
         }
       } catch (err) {}
     };
 
-    // AL TOCAR LA RULETA EN MODO ADMINISTRADOR:
-    // Se envía la orden al servidor y gira instantáneamente en todas las pantallas
+    // AL TOCAR LA RULETA: se envía la orden y gira para todos
     async function triggerSpinFromAdmin() {
       if (isSpinning) return;
       initAudio();
 
       try {
-        const res = await fetch('/api/spin', { method: 'POST' });
-        if (!res.ok) {
-          const err = await res.json();
-          alert(err.error || 'Error al iniciar giro');
-        }
-      } catch (e) {
-        alert('No se pudo conectar con el servidor');
-      }
+        await fetch('/api/spin', { method: 'POST' });
+      } catch (e) {}
     }
 
     adminWheelTouchable.addEventListener('click', triggerSpinFromAdmin);
-    adminWheelTouchable.addEventListener('touchstart', (e) => {
-      // Optimización táctil para móvil
-      initAudio();
-    }, { passive: true });
+    adminWheelTouchable.addEventListener('touchstart', () => initAudio(), { passive: true });
 
-    // También responde a la tecla Enter si estás en PC
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -520,17 +348,8 @@
       }
     });
 
-    // Reiniciar
-    resetCycleBtn.addEventListener('click', async () => {
-      if (confirm('¿Reiniciar a la Vuelta 1?')) {
-        await fetch('/api/reset', { method: 'POST' });
-      }
-    });
-
     renderWheel();
     draw(0);
-    hudValue.textContent = getNumAtPointer(0).label;
-    updateStepPills(0);
   </script>
 </body>
 </html>
