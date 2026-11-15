@@ -213,6 +213,43 @@
       font-size: 1.1rem;
     }
 
+    /* Indicador de pasos 1 al 4 */
+    .steps-progress {
+      display: flex;
+      gap: 0.4rem;
+      width: 100%;
+      justify-content: space-between;
+      margin-top: 0.2rem;
+    }
+
+    .step-pill {
+      flex: 1;
+      padding: 0.45rem 0.2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .step-pill.active {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+    }
+
+    .step-pill.step-winner.active {
+      background: rgba(0, 242, 254, 0.25);
+      border-color: var(--cyan);
+      color: #ffffff;
+      font-weight: 900;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+    }
+
     /* Botones secundarios */
     .footer-actions {
       display: flex;
@@ -267,6 +304,13 @@
       <div class="turn-label">ESTADO DEL CICLO</div>
       <div class="turn-name" id="turnName">VUELTA 1 DE PRUEBA</div>
       <div class="turn-sub" id="turnSub">Número aleatorio (excluye el 51)</div>
+      
+      <div class="steps-progress">
+        <div class="step-pill active" id="step1">1. Prueba</div>
+        <div class="step-pill" id="step2">2. Prueba</div>
+        <div class="step-pill" id="step3">3. Prueba</div>
+        <div class="step-pill step-winner" id="step4">4. Gana 51</div>
+      </div>
     </div>
 
     <button id="spinBtnRemote" class="btn-spin-remote" type="button">
@@ -314,6 +358,12 @@
     function updateTurnUI(turn) {
       currentTurn = turn;
       const nextTurn = (turn % 4) + 1;
+
+      // Actualizar píldoras de progreso
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`step${i}`);
+        if (el) el.classList.toggle('active', i === nextTurn);
+      }
 
       if (nextTurn === 1) {
         turnName.textContent = 'VUELTA 1 DE PRUEBA';
