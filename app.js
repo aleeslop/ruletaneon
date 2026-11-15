@@ -375,20 +375,21 @@
     confettiParticles = [];
   }
 
-  // ================= ANUNCIO DE RESULTADO LIMPIO (SIN MODAL INTRUSIVO) =================
-  // Solo actualiza la píldora inferior y la aguja/HUD, manteniendo la ruleta siempre visible.
+  // ================= ANUNCIO DE RESULTADO LIMPIO (TODO 100% IDÉNTICO) =================
+  // Mismo sonido, misma física y sin animaciones ni confeti diferente al caer en 51.
   function showResult(targetNum, isWinner, turnNumber) {
     spectatorStatusContainer.classList.remove('spinning', 'winner');
 
+    // Sonido exactamente idéntico para todos los giros (sin fanfarrias delatoras)
+    playTestChime();
+
+    // Animación exactamente igual: sin lluvia de confeti
+    stopConfetti();
+
     if (isWinner) {
-      // Vuelta 4: Cae en el 51 con confeti de celebración y formato idéntico
       spectatorStatus.textContent = `VUELTA OFICIAL: ${targetNum}`;
-      playWinnerFanfare();
-      launchConfettiCelebration(true);
     } else {
-      // Vueltas 1, 2 y 3: Vueltas de prueba
       spectatorStatus.textContent = `VUELTA DE PRUEBA: ${targetNum}`;
-      playTestChime();
     }
   }
 
