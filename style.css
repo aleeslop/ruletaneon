@@ -1,0 +1,530 @@
+/* ============================================================
+   RULETA DE SORTEOS OFICIAL - VISTA PÚBLICA MINIMALISTA
+   Dark mode con detalles neón en cian y magenta
+   Optimizada para pantalla móvil (iOS Safari & Android Chrome)
+   ============================================================ */
+
+:root {
+  --bg-primary: #06080e;
+  --bg-secondary: #0c101a;
+
+  /* Acentos Neón */
+  --cyan-primary: #00f2fe;
+  --cyan-glow: rgba(0, 242, 254, 0.45);
+  --cyan-subtle: rgba(0, 242, 254, 0.12);
+
+  --magenta-primary: #ff007f;
+  --magenta-glow: rgba(255, 0, 127, 0.45);
+  --magenta-subtle: rgba(255, 0, 127, 0.12);
+
+  /* Texto */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  /* Tipografía */
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-display);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ================= AMBIENTE Y FONDOS ================= */
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.bg-glow-cyan {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--cyan-primary) 0%, transparent 70%);
+  top: -120px;
+  left: -120px;
+  animation: floatSlow 20s ease-in-out infinite alternate;
+}
+
+.bg-glow-magenta {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, var(--magenta-primary) 0%, transparent 70%);
+  bottom: -140px;
+  right: -120px;
+  animation: floatSlow 24s ease-in-out infinite alternate-reverse;
+}
+
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes floatSlow {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, 35px) scale(1.08); }
+  100% { transform: translate(-25px, 60px) scale(0.95); }
+}
+
+/* ================= CONTENEDOR PRINCIPAL =================
+   Usa 100dvh y safe-area-insets para ajustarse a la barra de Safari
+   en iPhone sin empujar elementos hacia afuera.
+   ========================================================= */
+.app-container {
+  position: relative;
+  z-index: 2;
+  width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top, 0px) + 0.5rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 0.8rem);
+}
+
+/* ================= ENCABEZADO MINIMALISTA ================= */
+.spectator-header {
+  text-align: center;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  color: var(--cyan-primary);
+  font-size: clamp(0.68rem, 2.5vw, 0.82rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--cyan-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--cyan-primary);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.4; }
+}
+
+/* ================= SECCIÓN DE LA RULETA GIGANTE ================= */
+.roulette-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+/* HUD Tracker */
+.hud-tracker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(14, 18, 29, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 0.5rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.hud-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+}
+
+.hud-value {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--cyan-primary);
+  min-width: 2.2rem;
+  text-align: center;
+  text-shadow: 0 0 12px var(--cyan-glow);
+}
+
+/* Ruleta Gigante:
+   Dimensionada con min(88vw, 52dvh, 560px) para que en cualquier móvil vertical
+   deje suficiente espacio arriba y abajo sin desbordarse hacia la barra de navegación.
+*/
+.wheel-outer-wrapper {
+  position: relative;
+  width: min(88vw, 52dvh, 560px);
+  height: min(88vw, 52dvh, 560px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Aguja física indicadora */
+.pointer-assembly {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.pointer-pin {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 14px var(--cyan-primary), 0 2px 8px rgba(0,0,0,0.8);
+  border: 2px solid #0e121d;
+  z-index: 2;
+}
+
+.pointer-needle {
+  width: 0;
+  height: 0;
+  margin-top: -6px;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 38px solid #ff007f;
+  filter: drop-shadow(0 0 10px var(--magenta-primary)) drop-shadow(0 4px 10px rgba(0,0,0,0.8));
+  transform-origin: 50% 0%;
+  transition: transform 0.045s ease-out;
+}
+
+.pointer-needle.tick {
+  transform: rotate(-14deg);
+}
+
+.pointer-glow {
+  position: absolute;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  background: var(--magenta-primary);
+  filter: blur(14px);
+  opacity: 0.85;
+  border-radius: 50%;
+}
+
+/* Canvas Container */
+.wheel-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 6px;
+  background: radial-gradient(circle at center, #182234 0%, #090d15 70%);
+  box-shadow: 
+    0 0 0 4px rgba(255, 255, 255, 0.06),
+    0 0 40px rgba(0, 242, 254, 0.22),
+    0 0 80px rgba(255, 0, 127, 0.18),
+    inset 0 0 45px rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.4s ease;
+}
+
+.wheel-canvas-container.spinning {
+  box-shadow: 
+    0 0 0 4px rgba(0, 242, 254, 0.4),
+    0 0 65px rgba(0, 242, 254, 0.5),
+    0 0 110px rgba(255, 0, 127, 0.35),
+    inset 0 0 45px rgba(0, 0, 0, 0.95);
+}
+
+#rouletteCanvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Núcleo Central Decorativo */
+.wheel-center-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1a2234 30%, #0b0f19 100%);
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 0 25px rgba(0,0,0,0.8),
+    0 0 18px var(--cyan-glow),
+    inset 0 2px 6px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hub-ring {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 242, 254, 0.45);
+  animation: rotateHub 25s linear infinite;
+}
+
+@keyframes rotateHub {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hub-core {
+  width: 55%;
+  height: 55%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan-primary), var(--magenta-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+.hub-icon {
+  width: 60%;
+  height: 60%;
+  color: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
+/* ================= TEXTO DE ESTADO / RESULTADO ================= */
+.spectator-status-container {
+  margin-top: 0.6rem;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: rgba(14, 18, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.55rem 1.4rem;
+  border-radius: 100px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+  max-width: 90vw;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.status-pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--cyan-primary);
+  box-shadow: 0 0 10px var(--cyan-primary);
+  animation: pulseDot 1.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.spectator-status-text {
+  font-size: clamp(0.85rem, 3.4vw, 1.15rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+  text-align: center;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.spectator-status-container.spinning .status-pulse-dot {
+  background-color: var(--magenta-primary);
+  box-shadow: 0 0 12px var(--magenta-primary);
+}
+
+.spectator-status-container.spinning .spectator-status-text {
+  color: #ffffff;
+  text-shadow: 0 0 12px var(--magenta-glow);
+}
+
+.spectator-status-container.winner {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(14, 18, 30, 0.85);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.spectator-status-container.winner .spectator-status-text {
+  color: #ffffff;
+}
+
+/* ================= MODAL DE RESULTADOS (DESACTIVADO PARA MANTENER LA RULETA 100% VISIBLE) ================= */
+.modal-backdrop {
+  display: none !important;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-card {
+  position: relative;
+  background: linear-gradient(160deg, #131a29 0%, #0a0d15 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 2rem 1.6rem 1.4rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.85),
+    0 0 50px rgba(0, 242, 254, 0.15);
+  transform: scale(0.85) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.modal-backdrop.active .modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-glow {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 120px;
+  background: var(--cyan-primary);
+  filter: blur(65px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.modal-card.winner-mode .modal-glow {
+  background: var(--cyan-primary);
+  opacity: 0.45;
+  filter: blur(75px);
+}
+
+.modal-badge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: rgba(0, 242, 254, 0.12);
+  color: var(--cyan-primary);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  margin-bottom: 1rem;
+}
+
+.modal-number-circle {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1a2438 0%, #0f1522 100%);
+  border: 3.5px solid var(--cyan-primary);
+  box-shadow: 
+    0 0 32px var(--cyan-glow),
+    inset 0 0 20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-card.winner-mode .modal-number-circle {
+  border-color: var(--cyan-primary);
+  box-shadow: 
+    0 0 40px var(--cyan-glow),
+    inset 0 0 25px rgba(0, 242, 254, 0.2);
+}
+
+.modal-number {
+  font-family: var(--font-mono);
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.modal-message {
+  font-size: clamp(1.2rem, 3.8vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+  color: #ffffff;
+}
+
+.modal-subtext {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 1.1rem;
+}
+
+.modal-footer-hint {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ================= CAPA DE CONFETI ================= */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "ruleta-neon",
+  "version": "1.0.0",
+  "description": "Ruleta de sorteos interactiva en tiempo real con modo oscuro neón",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["ruleta", "sorteo", "neon", "realtime", "sse"],
+  "author": "Ruleta Pro",
+  "license": "ISC"
+}
